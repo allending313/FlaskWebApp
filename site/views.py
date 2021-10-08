@@ -3,26 +3,22 @@ from flask import Blueprint, json, render_template, request, jsonify, redirect, 
 
 frontpage = Blueprint(__name__, "frontpage")
 
-name = "allen"
 
 @frontpage.route("/")
 def home():
-    return render_template("index.html", name=name)
+    return render_template("index.html")
 
-@frontpage.route("/profile")
-def profile(username):
-    args = request.args
-    name = args.get("name")
-    return render_template("index.html", name=username)
+@frontpage.route("/login", methods=["POST","GET"])
+def login():
+    if request.method == "POST":
+        user = request.form["nm"]
+        return redirect(url_for("views.user", usr=user))
+    else:
+        return render_template("login.html")
 
-@frontpage.route("/json")
-def get_json():
-    return jsonify({})
-
-@frontpage.route("/data")
-def get_data():
-    data = request.json
-    return jsonify(data)
+@frontpage.route("/<usr>")
+def user(usr):
+    return f"<h1>{usr}</h1>"
 
 @frontpage.route("/backhome")
 def backhome():
